@@ -108,12 +108,8 @@
 </template>
 
 <script>
-import {
-  getQcKeyApi,
-  getQcApi,
-  getQcStateApi,
-  loginByNumApi,
-} from "@/api/login";
+import { getQcKeyApi, getQcApi, getQcStateApi } from "@/api/login";
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -197,19 +193,20 @@ export default {
     async loginByNum() {
       let phone = this.loginType[0].iptValue.num;
       let password = this.loginType[0].iptValue.pws;
-      let res = await loginByNumApi({
+      let res = await this.loginByPhone({
         phone,
         password,
       });
-      console.log(res);
       if (res.code === 200) {
         this.loginType[0].iptValue.num = "";
         this.loginType[0].iptValue.pws = "";
-        localStorage.setItem("cookies", res.cookie);
-        localStorage.setItem("userInfo", JSON.stringify(res.profile));
         this.$emit("closeDialg");
       }
+      this.$emit("loginBtn");
     },
+    ...mapActions({
+      loginByPhone: "login/LOGIN_PHONE",
+    }),
   },
 };
 </script>

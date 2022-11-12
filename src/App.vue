@@ -14,5 +14,6 @@ body {
   padding: 0;
   list-style: none;
   font-style: normal;
+  cursor: default;
 }
 </style>

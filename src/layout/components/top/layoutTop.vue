@@ -30,11 +30,22 @@
           :src="userInfo.avatarUrl"
           alt=""
           style="width: 32px; height: 32px; border-radius: 50%"
+          @mouseover="loginEjectFlag = !loginEjectFlag"
         />
+        <div class="login_eject" v-if="loginEjectFlag">
+          <div class="login_triangle"></div>
+          <div class="login_choose">
+            <span @click="outLogin">退出登录</span>
+          </div>
+        </div>
       </div>
       <div class="login" @click="login" v-else>登录</div>
 
-      <LoginDialg v-if="loginDialgFlag" @closeDialg="closeDialg"></LoginDialg>
+      <LoginDialg
+        v-if="loginDialgFlag"
+        @closeDialg="closeDialg"
+        @loginBtn="loginBtn"
+      ></LoginDialg>
     </div>
     <!-- 第一个tabs end -->
     <!-- 第二个tabs -->
@@ -51,21 +62,25 @@
 <script>
 import ChildTop from "./components/childTop.vue";
 import LoginDialg from "./components/loginDialg.vue";
+import { outLoginApi } from "@/api/login";
 export default {
   components: {
     ChildTop,
     LoginDialg,
   },
   created() {
-    this.cookies = localStorage.getItem("cookies");
-    this.userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    console.log(this.userInfo);
+    this.cookie = localStorage.getItem("cookie") || "";
+    this.userInfo = localStorage.getItem("profile")
+      ? JSON.parse(localStorage.getItem("profile"))
+      : "";
   },
+
   data() {
     return {
-      userInfo: {},
-      cookies: "",
+      userInfo: {}, // 当前登录者的信息
+      cookies: "", // 当前登录者的标志
       tabs: [
+        // tab值
         {
           title: "发现音乐",
           url: "/find",
@@ -86,12 +101,19 @@ export default {
         { title: "音乐人", url: "/music", chliden: { tabs: [] } },
         { title: "下载客户端", url: "/download", chliden: { tabs: [] } },
       ],
-      actvieIndex: 0,
-      childIndex: 0,
-      loginDialgFlag: false,
+      actvieIndex: 0, // 当前第一层的选中的tab
+      childIndex: 0, // 当前第二层的选中的tab
+      loginDialgFlag: false, // 登录弹框的显示与隐藏的flag
+      loginEjectFlag: false, // 登录成功后鼠标移入弹出的选择框
     };
   },
   methods: {
+    loginBtn() {
+      this.cookie = localStorage.getItem("cookie") || "";
+      this.userInfo = localStorage.getItem("profile")
+        ? JSON.parse(localStorage.getItem("profile"))
+        : "";
+    },
     changeBackColor(i) {
       this.actvieIndex = i;
       this.childIndex = i;
@@ -106,6 +128,17 @@ export default {
     },
     closeDialg() {
       this.loginDialgFlag = false;
+    },
+    async outLogin() {
+      await outLoginApi({
+        cookies: this.cookies,
+      });
+      // console.log(res);
+      this.loginEjectFlag = !this.loginEjectFlag;
+      localStorage.setItem("cookie", "");
+      localStorage.setItem("profile", "");
+      this.cookies = "";
+      this.userInfo = {};
     },
   },
 };
@@ -186,6 +219,34 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
+      position: relative;
+      .login_eject {
+        position: absolute;
+        z-index: 4;
+        top: 35px;
+        left: 50%;
+        transform: translateX(-50%);
+        // overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .login_triangle {
+          height: 0;
+          width: 0;
+          border: 5px solid transparent;
+          border-bottom: 5px solid #424242;
+        }
+        .login_choose {
+          width: 90px;
+          font-size: 12px;
+          text-align: center;
+          background-color: #2b2b2b;
+          padding: 5px;
+          box-shadow: 0px 0px 10px 0px rgba($color: #000000, $alpha: 0.5);
+          box-sizing: border-box;
+          border-radius: 5px;
+        }
+      }
     }
   }
 }

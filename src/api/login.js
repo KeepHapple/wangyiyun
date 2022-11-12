@@ -33,3 +33,11 @@ export const loginByNumApi = (params) => {
     method: "get",
   });
 };
+
+// 退出登录
+export const outLoginApi = (params) => {
+  return request({
+    url: "/logout?" + qs.stringify(params),
+    method: "get",
+  });
+};

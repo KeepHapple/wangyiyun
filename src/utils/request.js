@@ -9,6 +9,7 @@ const request = axios.create({
 
 request.interceptors.request.use(
   (config) => {
+    // config.headers
     return config;
   },
   (err) => {

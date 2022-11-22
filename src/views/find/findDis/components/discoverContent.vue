@@ -84,7 +84,7 @@
       </ul>
     </div>
     <div class="right">
-      <div v-if="!userInfo.userId" class="right_none">
+      <div v-if="!userInfo" class="right_none">
         登录网易云音乐，可以享受无限收藏的乐趣，并且无限同步到手机
       </div>
       <div v-else class="right_collection">
@@ -310,7 +310,7 @@ export default {
         display: flex;
         margin: 15px 0px;
         align-items: center;
-        background-color: #f7f7f7;
+        background-color: #fff;
         padding: 15px;
         box-sizing: border-box;
         border-radius: 5px;

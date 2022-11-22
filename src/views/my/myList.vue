@@ -22,7 +22,7 @@
                 v-for="(item, i) in myListenList"
                 :key="i"
                 class="content_li"
-                @click="jumpList(item.id)"
+                @click="jumpList(item.id, i)"
               >
                 <img :src="item.coverImgUrl" alt="" />
                 <div class="text">
@@ -76,8 +76,74 @@
 
       <!-- 我创建的歌单 -->
       <div v-if="clickType === 2 && songsList.length !== 0" class="my_list">
+        <div class="my_list_title">
+          <div class="title_avg">
+            <img :src="myListenList[nowMyCreateIndex].coverImgUrl" alt="" />
+          </div>
+          <div class="title_info">
+            <div class="name">
+              {{ myListenList[nowMyCreateIndex].name }}
+            </div>
+            <div class="infomation">
+              <img
+                :src="myListenList[nowMyCreateIndex].creator.avatarUrl"
+                alt=""
+              />
+              <span class="creater_name">
+                {{ myListenList[nowMyCreateIndex].creator.nickname }}
+              </span>
+              <span class="create_time"
+                >{{
+                  formDate(myListenList[nowMyCreateIndex].createTime)
+                }}
+                创建</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="list_header">
+          <div class="header_title">
+            <span class="header_title_name">歌曲列表</span>
+            <span class="header_title_num">{{
+              songsList.length + "首歌"
+            }}</span>
+          </div>
+          <span class="header_play"
+            >播放：<span style="color: #c20c0c; font-weight: 700">{{
+              myListenList[nowMyCreateIndex].playCount
+            }}</span
+            >次</span
+          >
+        </div>
+        <div class="table_title">
+          <span style="width: 15%">序号</span>
+          <span style="width: 40%">歌曲标题</span>
+          <span style="width: 15%">时长</span>
+          <span style="width: 15%">歌手</span>
+          <span style="width: 15%">专辑</span>
+        </div>
         <ul>
-          <li v-for="(item, i) in songsList" :key="i">{{ item.name }}</li>
+          <li
+            v-for="(item, i) in songsList"
+            :key="i"
+            class="song"
+            @dblclick="handlePlayMusic(item.id, i)"
+          >
+            <div class="song_num" style="width: 15%">{{ i + 1 }}</div>
+            <div class="song_title" style="width: 40%">{{ item.name }}</div>
+            <div class="song_time" style="width: 15%" ref="songTime">
+              {{
+                formDate(item.dt).split(" ")[1].split(":")[1] +
+                ":" +
+                formDate(item.dt).split(" ")[1].split(":")[2]
+              }}
+            </div>
+            <div class="song_songer" style="width: 15%">
+              {{ item.ar[0].name }}
+            </div>
+            <div class="song_album" style="width: 15%">{{ item.al.name }}</div>
+          </li>
         </ul>
       </div>
       <!-- 我创建的歌单 end -->
@@ -89,7 +155,7 @@
 </template>
 
 <script>
-// import { mapState } from "vuex";
+import { mapActions } from "vuex";
 import {
   getMySingerApi,
   getMyRadioApi,
@@ -107,6 +173,7 @@ export default {
       myLiHeightFlag: false, // 我创建的歌单的展示标志
       songsList: [], // 点击对应歌单的所有歌曲
       songsInfo: {}, // 点击对应歌单的歌单信息
+      nowMyCreateIndex: 0, // 当前点击的 歌单 的索引
     };
   },
   created() {
@@ -114,7 +181,21 @@ export default {
     this.getMyRadio();
     this.getMyCreateList();
   },
+  computed: {},
   methods: {
+    ...mapActions({
+      actionSetPlayList: "bar/ACTION_PLAY",
+    }),
+
+    // 双击播放歌曲
+    handlePlayMusic(id, i) {
+      this.actionSetPlayList({
+        playList: this.songsList,
+        nowPlayId: id,
+        index: i,
+      });
+    },
+
     // 获取我的歌手
     async getMySinger() {
       let res = await getMySingerApi({
@@ -124,6 +205,7 @@ export default {
         this.mySingerList = res.data;
       }
     },
+
     //获取我的电台
     async getMyRadio() {
       let res = await getMyRadioApi({
@@ -133,6 +215,7 @@ export default {
         this.myRedioList = res.djRadios;
       }
     },
+
     //获取我的歌单
     async getMyCreateList() {
       let userInfo = JSON.parse(localStorage.getItem("profile"));
@@ -150,12 +233,14 @@ export default {
     myListView() {
       this.myLiHeightFlag = !this.myLiHeightFlag;
     },
+
     // 展示对应歌单的所有歌曲
-    async jumpList(id) {
+    async jumpList(id, index) {
+      this.nowMyCreateIndex = index;
       let res = await getListAllApi({
         id,
       });
-      console.log(res);
+
       if (res.code === 200) {
         this.songsInfo = res.playlist;
         this.songsList = res.playlist.tracks;
@@ -287,6 +372,94 @@ export default {
         .redio_time {
           font-size: 12px;
           color: #8b8b8b;
+        }
+      }
+    }
+
+    .my_list {
+      .my_list_title {
+        display: flex;
+        padding: 20px;
+        box-sizing: border-box;
+        .title_avg {
+          width: 208px;
+          height: 208px;
+          img {
+            width: 100%;
+            height: 100%;
+          }
+        }
+        .title_info {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          margin-left: 20px;
+          .name {
+            font-size: 24px;
+            font-weight: 700;
+          }
+          .infomation {
+            margin-top: 20px;
+            display: flex;
+            // justify-content: center;
+            align-items: center;
+            img {
+              width: 35px;
+              height: 35px;
+            }
+            .creater_name {
+              font-size: 12px;
+              color: #0c73c2;
+              margin-left: 10px;
+            }
+            .create_time {
+              margin-left: 10px;
+              font-size: 12px;
+            }
+          }
+        }
+      }
+      .list_header {
+        padding: 10px 20px;
+        box-sizing: border-box;
+        border-bottom: 2px solid #c20c0c;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        .header_title {
+          .header_title_name {
+            font-size: 24px;
+            font-weight: 700;
+          }
+          .header_title_num {
+            font-size: 12px;
+            color: #8b8b8b;
+            margin-left: 20px;
+          }
+        }
+        .header_play {
+          font-size: 12px;
+        }
+      }
+      .table_title {
+        width: 100%;
+        span {
+          display: inline-block;
+          padding: 10px 5px;
+          box-sizing: border-box;
+          font-size: 12px;
+        }
+      }
+      .song {
+        display: flex;
+        width: 100%;
+        div {
+          padding: 10px 5px;
+          box-sizing: border-box;
+          font-size: 12px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
         }
       }
     }

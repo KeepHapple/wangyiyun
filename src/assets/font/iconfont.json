@@ -6,6 +6,48 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "6151260",
+      "name": "pause circle",
+      "font_class": "pausecircle",
+      "unicode": "e80d",
+      "unicode_decimal": 59405
+    },
+    {
+      "icon_id": "5029",
+      "name": "列表",
+      "font_class": "liebiao",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "1159898",
+      "name": "随机播放",
+      "font_class": "suijibofang",
+      "unicode": "e622",
+      "unicode_decimal": 58914
+    },
+    {
+      "icon_id": "6207780",
+      "name": "顺序循环",
+      "font_class": "ziyuanldpi",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
+      "icon_id": "18965480",
+      "name": "单曲循环",
+      "font_class": "danquxunhuan",
+      "unicode": "e6a2",
+      "unicode_decimal": 59042
+    },
+    {
+      "icon_id": "1690221",
+      "name": "music_pause_button",
+      "font_class": "music_pause_button",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    },
+    {
       "icon_id": "11488001",
       "name": "close",
       "font_class": "close",

@@ -23,6 +23,7 @@
               class="per_content_li"
               v-for="(item, index) in recommend"
               :key="index"
+              @click="jumpSheet(item.id)"
             >
               <div
                 class="card"
@@ -61,6 +62,7 @@
               class="per_content_li"
               v-for="(item, index) in hotPlayList"
               :key="index"
+              @click="jumpSheet(item.id)"
             >
               <div
                 class="card"
@@ -92,6 +94,7 @@
           v-for="(item, index) in playlist"
           :key="index"
           class="collection_list"
+          @click="jumpSheet(item.id)"
         >
           <img :src="item.coverImgUrl" alt="" />
           <span>{{ item.name }}</span>
@@ -130,6 +133,9 @@ export default {
     this.getHotList();
   },
   methods: {
+    jumpSheet(id) {
+      this.jump("songSheet", { id });
+    },
     //获取每日推荐的当前周几
     getWeek(day) {
       let week = [

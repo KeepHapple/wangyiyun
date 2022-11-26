@@ -1,10 +1,15 @@
 import Vue from "vue";
+import qs from "qs";
 
 Vue.mixin({
   methods: {
-    jump(path) {
+    jump(path, params = {}) {
       if (path === this.$route.path) return;
-      return this.$router.push(path);
+      return this.$router.push(path + "?" + qs.stringify(params));
+    },
+    jumpByName(name, params = {}) {
+      console.log(params);
+      return this.$router.push({ name, params });
     },
     formDate(time) {
       let str = "";

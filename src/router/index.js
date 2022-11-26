@@ -6,6 +6,9 @@ import FindDiscover from "../views/find/findDis/findDiscover.vue";
 
 import MyList from "@/views/my/myList.vue";
 
+// 全局的歌单组件
+import SongSheet from "@/components/songSheet.vue";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -29,6 +32,11 @@ const routes = [
       {
         path: "/my",
         component: MyList,
+      },
+      {
+        path: "/songsheet",
+        name: "songSheet",
+        component: SongSheet,
       },
     ],
   },

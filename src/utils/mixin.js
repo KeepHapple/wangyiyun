@@ -4,6 +4,7 @@ import qs from "qs";
 Vue.mixin({
   methods: {
     jump(path, params = {}) {
+      console.log(this.$route);
       if (path === this.$route.path) return;
       return this.$router.push(path + "?" + qs.stringify(params));
     },

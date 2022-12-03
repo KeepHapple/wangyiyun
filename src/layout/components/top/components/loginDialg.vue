@@ -182,9 +182,10 @@ export default {
 
       this.t = setInterval(async () => {
         let res = await getQcStateApi({ key: key.data.unikey });
-        console.log("1");
+        console.log(res);
         if (res.code === 803) {
-          localStorage.setItem("cookies", res.cookies);
+          localStorage.setItem("cookies", res.cookie);
+          this.closeDialg();
           clearInterval(this.t);
         }
       }, 1000);

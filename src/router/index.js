@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Layout from "../layout/musicLayout.vue";
 
 import FindDiscover from "../views/find/findDis/findDiscover.vue";
+import FindTopList from "@/views/find/topList/topList.vue";
 
 import MyList from "@/views/my/myList.vue";
 
@@ -19,15 +20,16 @@ const routes = [
     children: [
       {
         path: "/find",
+        component: FindDiscover,
+      },
+      {
+        path: "/find/discover",
         alias: "/",
         component: FindDiscover,
-        children: [
-          {
-            path: "/find/discover",
-            alias: "/find",
-            component: FindDiscover,
-          },
-        ],
+      },
+      {
+        path: "/find/toplist",
+        component: FindTopList,
       },
       {
         path: "/my",

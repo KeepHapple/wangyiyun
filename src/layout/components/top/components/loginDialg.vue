@@ -13,6 +13,10 @@
             class="saoma_img"
           />
           <div class="qr">
+            <div class="log">
+              扫码登陆接口存在相当大的延迟，请扫码后等待四到五分钟！！！
+              <div>并且现在因为网易云开启了云盾，目前只支持扫码登录！！！</div>
+            </div>
             <div class="qr_title">扫码登录</div>
             <img :src="qrimgSrc" alt="" class="qr_img" />
             <div class="qr_user_mether">
@@ -108,7 +112,12 @@
 </template>
 
 <script>
-import { getQcKeyApi, getQcApi, getQcStateApi } from "@/api/login";
+import {
+  getQcKeyApi,
+  getQcApi,
+  getQcStateApi,
+  getUserInfoApi,
+} from "@/api/login";
 import { mapActions } from "vuex";
 export default {
   data() {
@@ -182,11 +191,16 @@ export default {
 
       this.t = setInterval(async () => {
         let res = await getQcStateApi({ key: key.data.unikey });
-        console.log(res);
+        // console.log(res);
         if (res.code === 803) {
-          localStorage.setItem("cookies", res.cookie);
+          let info = await getUserInfoApi({ cookie: res.cookie });
+          localStorage.setItem("profile", JSON.stringify(info.profile));
+          localStorage.setItem("cookie", res.cookie);
           this.closeDialg();
           clearInterval(this.t);
+        }
+        if (res.code === 800) {
+          this.startSaoma();
         }
       }, 1000);
     },
@@ -262,6 +276,20 @@ export default {
           justify-content: center;
           align-items: center;
           flex-direction: column;
+          // position: relative;
+          .log {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            box-sizing: border-box;
+            width: 300px;
+            text-align: center;
+          }
           .qr_title {
             font-size: 18px;
           }

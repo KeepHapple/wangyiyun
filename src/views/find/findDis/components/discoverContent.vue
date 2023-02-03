@@ -42,7 +42,11 @@
                 <span class="text_content">猜你喜欢</span>
               </div>
             </li>
-            <li class="per_content_li" v-if="recommend" style="font-size: 14px">
+            <li
+              class="per_content_li"
+              v-if="recommend.length == 0"
+              style="font-size: 14px"
+            >
               登陆即可查看推荐哦
             </li>
           </ul>
@@ -166,6 +170,7 @@ export default {
       });
       if (res.code === 200) {
         this.recommend = res.recommend.slice(0, 3);
+        // console.log(this.recommend);
       }
     },
 

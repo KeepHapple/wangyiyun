@@ -18,10 +18,18 @@ export const getQcApi = (params) => {
   });
 };
 
-// 通过二维码的key获取二维码
+// 二维码扫码的状态转换信息
 export const getQcStateApi = (params) => {
   return request({
     url: "/login/qr/check?" + qs.stringify(params),
+    method: "get",
+  });
+};
+
+// 通过二维码的传递过来的cookie获取用户的信息
+export const getUserInfoApi = (params) => {
+  return request({
+    url: "user/account?" + qs.stringify(params),
     method: "get",
   });
 };
